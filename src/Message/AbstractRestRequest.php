@@ -14,7 +14,7 @@ abstract class AbstractRestRequest extends AbstractRequest
 {
     const API_VERSION = 'v3';
     protected $liveEndpoint = 'https://online.atol.ru/possystem';
-    protected $testEndpoint = 'https://online.atol.ru/possystem';
+    protected $testEndpoint = 'https://testonline.atol.ru/possystem';
 
 
     public function getLogin()
