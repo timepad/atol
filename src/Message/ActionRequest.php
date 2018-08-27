@@ -124,6 +124,9 @@ class ActionRequest extends AbstractRestRequest
 
     public function setEmail($value)
     {
+        if($this->getTestMode()) {
+            $this->setParameter('testEmail', $value);
+        }
         return $this->setParameter('email', $value);
     }
 
