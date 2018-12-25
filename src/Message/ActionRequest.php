@@ -58,12 +58,15 @@ class ActionRequest extends AbstractRestRequest
                 'price'          => $item->getPrice(),
                 'quantity'       => $item->getQuantity(),
                 'sum'            => $item->getSum(),
-                'payment_method' => $item->getPaymentMethod(),//TODO не забыть передать их
-                'payment_object' => $item->getPaymentObject(),//TODO не забыть передать их
+                'payment_method' => $item->getPaymentMethod(),
+                'payment_object' => $item->getPaymentObject(),
                 'vat'            => [
                     'type' => $item->getTax(),
                     'sum'  => $item->getTaxSum(),
-                ]
+                ],
+                'agent_info'     => [
+                    'type' => 'another'
+                ],
 
             ];
         }
