@@ -15,50 +15,36 @@ class ActionRequest extends AbstractRestRequest
     public function getData()
     {
         $this->validate('externalId', 'inn', 'datePayment', 'paymentAddress', 'totalSum', 'typeSum', 'totalSum');
+
+        if (empty($this->getOrgEmail())) {
+            $this->validate('org_email');
+        }
+
         $data = [
             'external_id' => (string)$this->getExternalId(),
-            'service' => [
+            'service'     => [
                 'callback_url' => $this->getCallBackUrl(),
-                'inn' => $this->getInn(),
-                'payment_address' => $this->getPaymentAddress(),
             ],
-            'timestamp' => $this->getDatePayment(),// '29.05.2017 17:56:18',
+            'timestamp'   => $this->getDatePayment(),// '29.05.2017 17:56:18',
+            'receipt'     => [
+                'client'   => [
+                    'email' => $this->getClientEmail(),
+                ],
+                'company'  => [
+                    'email'           => (string)$this->getOrgEmail(),
+                    'sno'             => $this->getSno(),
+                    'inn'             => $this->getInn(),
+                    'payment_address' => $this->getPaymentAddress(),
+                ],
+                'payments' => [
+                    [
+                        'type' => $this->getTypeSum(),
+                        'sum'  => $this->getTotalSum(),
+                    ]
+                ],
+                'total'    => $this->getTotalSum(),
+            ]
         ];
-        if ($this->getAction() == 'sell_correction' || $this->getAction() == 'buy_correction') {
-            $this->validate('tax');
-            $data['correction'] = [
-                'attributes' => [
-                    'tax' => $this->getTax(),
-                    'sno' => $this->getSno(),
-                ],
-                'payments' => [
-                    [
-                        'sum' => $this->getTotalSum(),
-                        'type' => $this->getTypeSum(),
-                    ]
-                ],
-            ];
-        } else {
-            $this->setEmail($this->getTestMode() ? $this->getTestEmail() : $this->getEmail());
-            $this->setPhone($this->getTestMode() ? $this->getTestPhone() : $this->getPhone());
-            if (empty($this->getEmail()) && empty($this->getPhone())) {
-                $this->validate('email', 'phone');
-            }
-            $data['receipt'] = [
-                'attributes' => [
-                    'email' => (string) $this->getEmail(),
-                    'phone' => (string) $this->getPhone(),
-                    'sno' => $this->getSno(),
-                ],
-                'payments' => [
-                    [
-                        'sum' => $this->getTotalSum(),
-                        'type' => $this->getTypeSum(),
-                    ]
-                ],
-                'total' => $this->getTotalSum(),
-            ];
-        }
 
         /** @var Item $item */
         foreach ($this->getItems() as $item) {
@@ -68,12 +54,20 @@ class ActionRequest extends AbstractRestRequest
                 throw new InvalidRequestException("The Item parameter name, price, quantity, sum and tax is required");
             }
             $data['receipt']['items'][] = [
-                'name' => $item->getName(),
-                'price' => $item->getPrice(),
-                'quantity' => $item->getQuantity(),
-                'sum' => $item->getSum(),
-                'tax' => $item->getTax(),
-                'tax_sum' => $item->getTaxSum(),
+                'name'           => $item->getName(),
+                'price'          => $item->getPrice(),
+                'quantity'       => $item->getQuantity(),
+                'sum'            => $item->getSum(),
+                'payment_method' => $item->getPaymentMethod(),
+                'payment_object' => $item->getPaymentObject(),
+                'vat'            => [
+                    'type' => $item->getTax(),
+                    'sum'  => $item->getTaxSum(),
+                ],
+                'agent_info'     => [
+                    'type' => 'another'
+                ],
+
             ];
         }
         return $data;
@@ -117,27 +111,24 @@ class ActionRequest extends AbstractRestRequest
         return $this->setParameter('externalId', $value);
     }
 
-    public function getEmail()
+    public function getOrgEmail()
     {
-        return $this->getParameter('email');
+        return $this->getParameter('org_email');
     }
 
-    public function setEmail($value)
+    public function setOrgEmail($value)
     {
-        if($this->getTestMode()) {
-            $this->setParameter('testEmail', $value);
-        }
-        return $this->setParameter('email', $value);
+        return $this->setParameter('org_email', $value);
     }
 
-    public function getPhone()
+    public function getClientEmail()
     {
-        return $this->getParameter('phone');
+        return $this->getParameter('client_email');
     }
 
-    public function setPhone($value)
+    public function setClientEmail($value)
     {
-        return $this->setParameter('phone', $value);
+        return $this->setParameter('client_email', $value);
     }
 
     public function getSno()

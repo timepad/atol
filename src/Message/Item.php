@@ -113,5 +113,21 @@ class Item extends OmnipayItem
     {
         return $this->getSumFormat('quantity');
     }
+
+    public function setPaymentMethod($method = 'full_prepayment') {
+        return $this->setParameter('payment_method', $method);
+    }
+
+    public function getPaymentMethod() {
+        return $this->getParameter('payment_method');
+    }
+
+    public function setPaymentObject($method = 'service') {
+        return $this->setParameter('payment_object', $method);
+    }
+
+    public function getPaymentObject() {
+        return $this->getParameter('payment_object');
+    }
 }
 

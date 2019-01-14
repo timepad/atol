@@ -61,8 +61,7 @@ $gateway->setSno([Применяемая система налогообложе
         //->setInn('7729656202')
         //->setPaymentAddress('test1.atol.ru')
         ->setDatePayment('14.06.2017 15:01:01')
-        ->setEmail('sd@df.ru')
-        //->setPhone('9123456789') or email or phone
+        ->setOrgEmail('sd@df.ru')
         ->setSno('osn')
         ->setTotalSum(15)
         ->setTypeSum(1);
