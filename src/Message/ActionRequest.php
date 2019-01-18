@@ -67,6 +67,11 @@ class ActionRequest extends AbstractRestRequest
                 'agent_info'     => [
                     'type' => 'another'
                 ],
+                'supplier_info' => [
+                    'phones' => $item->getSupplierPhones(),
+                    'name'   => $item->getSupplierName(),
+                    'inn'    => $item->getSupplierInn(),
+                ],
 
             ];
         }
