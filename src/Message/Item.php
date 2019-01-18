@@ -129,5 +129,29 @@ class Item extends OmnipayItem
     public function getPaymentObject() {
         return $this->getParameter('payment_object');
     }
+
+    public function setSupplierPhones(array $phones = []) {
+        return $this->setParameter('supplier_phones', $phones);
+    }
+
+    public function getSupplierPhones() {
+        return $this->getParameter('supplier_phones');
+    }
+
+    public function setSupplierName(string $name) {
+        return $this->setParameter('supplier_name', $name);
+    }
+
+    public function getSupplierName() {
+        return $this->getParameter('supplier_name');
+    }
+
+    public function setSupplierInn(string $inn) {
+        return $this->setParameter('supplier_inn', $inn);
+    }
+
+    public function getSupplierInn() {
+        return $this->getParameter('supplier_inn');
+    }
 }
 
