@@ -53,7 +53,8 @@ class ActionRequest extends AbstractRestRequest
             ) {
                 throw new InvalidRequestException("The Item parameter name, price, quantity, sum and tax is required");
             }
-            $data['receipt']['items'][] = [
+
+            $receiptItem = [
                 'name'           => $item->getName(),
                 'price'          => $item->getPrice(),
                 'quantity'       => $item->getQuantity(),
@@ -64,16 +65,18 @@ class ActionRequest extends AbstractRestRequest
                     'type' => $item->getTax(),
                     'sum'  => $item->getTaxSum(),
                 ],
-                'agent_info'     => [
-                    'type' => 'another'
-                ],
-                'supplier_info' => [
+            ];
+
+            if ($item->getSupplierInn()) {
+                $receiptItem['agent_info'] = ['type' => 'another'];
+                $receiptItem['supplier_info'] = [
                     'phones' => $item->getSupplierPhones(),
                     'name'   => $item->getSupplierName(),
                     'inn'    => $item->getSupplierInn(),
-                ],
+                ];
+            }
 
-            ];
+            $data['receipt']['items'][] = $receiptItem;
         }
         return $data;
     }
